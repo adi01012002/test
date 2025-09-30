@@ -1,0 +1,56 @@
+import { useRef } from "react";
+import emailjs from "emailjs-com";
+
+const SERVICE_ID = "your_service_id";   // EmailJS Service ID
+const TEMPLATE_OWNER = "template_owner"; // Owner ke liye template ID
+const TEMPLATE_USER = "template_user";   // User auto-reply template ID
+const PUBLIC_KEY = "your_public_key";   // EmailJS Public Key
+
+const ContactForm: React.FC = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+    const data = Object.fromEntries(formData.entries());
+
+    // 1. Email to Owner
+    emailjs.send(SERVICE_ID, TEMPLATE_OWNER, data, PUBLIC_KEY)
+      .then(() => console.log("✅ Sent to owner"))
+      .catch(err => console.error("❌ Owner email failed:", err));
+
+    // 2. Auto-Reply to User
+    emailjs.send(SERVICE_ID, TEMPLATE_USER, data, PUBLIC_KEY)
+      .then(() => {
+        alert("✅ Message sent successfully!");
+        formRef.current?.reset();
+      })
+      .catch(err => console.error("❌ Auto-reply failed:", err));
+  };
+
+  return (
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 p-4 border rounded">
+      <input type="text" name="user_name" placeholder="Your Name" required className="w-full p-2 border rounded" />
+      <input type="email" name="user_email" placeholder="Your Email" required className="w-full p-2 border rounded" />
+      <input type="tel" name="phone" placeholder="Your Phone" required className="w-full p-2 border rounded" />
+      
+      <select name="service" required className="w-full p-2 border rounded">
+        <option value="">Select Service</option>
+        <option value="Indian ITR">Indian ITR</option>
+        <option value="Foreign ITR">Foreign ITR</option>
+        <option value="Company ITR">Company ITR</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <textarea name="message" placeholder="Your Message" className="w-full p-2 border rounded" />
+
+      <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+        Send
+      </button>
+    </form>
+  );
+};
+
+export default ContactForm;

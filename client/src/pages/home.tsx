@@ -43,11 +43,12 @@ const contactFormSchema = z.object({
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
-// EmailJS Configuration (replace with your actual values)
-const SERVICE_ID = "service_qp66gnb"; // EmailJS Service ID
-const TEMPLATE_OWNER = "template_zx6k3vy"; // Owner ke liye template ID
-const TEMPLATE_USER = "template_xn0a7zi"; // User auto-reply template ID
-const PUBLIC_KEY = "qd6oN02NEwKgD56Iz"; // EmailJS Public Key
+
+
+const SERVICE_ID = import.meta.env.SERVICE_ID;
+const TEMPLATE_OWNER = import.meta.env.TEMPLATE_OWNER;
+const TEMPLATE_USER = import.meta.env.TEMPLATE_USER;
+const PUBLIC_KEY = import.meta.env.PUBLIC_KEY;
 
 const navLinks = [
   { href: "#home", label: "Home" },
